@@ -14,6 +14,7 @@ Link to project license: https://creativecommons.org/licenses/by-nc-sa/4.0/
 #### The code for HeatMap Visualization was borrowed from the article "Various Confusion Matrix Plots" by user Mecit Gungor on kaggle.com. Link to webpage: https://www.kaggle.com/agungor2/various-confusion-matrix-plots
 #### The code for Down Sampling was found in the article "How to Handle Imbalanced Classes in Machine Learning" on elitedatascience.com. Link to webpage: https://elitedatascience.com/imbalanced-classes
 #### The code for implementing the K-Fold Cross-Validatation was found in the article "Repeated k-Fold Cross-Validation for Model Evaluation in Python" by Jason Brownlee at machinelearningmastery.com. Link to webpage: https://machinelearningmastery.com/repeated-k-fold-cross-validation-with-python/
+#### The code for using the VADER library was found in the article "Python | Sentiment Analysis using VADER" at geeksforgeeks.org https://www.geeksforgeeks.org/python-sentiment-analysis-using-vader/
 #### The dataset "S&P 500 Companies with Financial Information" was used fairly from datahub.io. Link to webpage: https://datahub.io/core/s-and-p-500-companies#resource-constituents
 #### The API used to collect the current news headlines can be found at https://newsapi.org/
 
