@@ -1,16 +1,13 @@
 import pandas as pd
 from dotenv import load_dotenv
 import os
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import make_pipeline
-from sklearn.feature_extraction.text import TfidfVectorizer
 from newsapi import NewsApiClient
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
 load_dotenv()
 
 my_python_key = os.getenv('API_KEY')
 df = pd.read_csv('/Users/hunterpeterson/Downloads/constituents_csv.csv')
-sentiment_df = pd.read_csv('/Users/hunterpeterson/Downloads/archive/all-data.csv', encoding='ISO-8859-1', names=['Sentiment', 'Headline'])
 news_dict = {
 
 }
@@ -20,46 +17,47 @@ top_headlines = newsapi.get_top_headlines(category='business',
                                           country='us')
 titles = []
 for i in range(0, 20):
-    titles.append(top_headlines['articles'][i]['title'])
+    titles.append(top_headlines['articles'][i]['title'] + " " + top_headlines['articles'][i]['description'])
 
 for i in range(0, len(df)):
     for j in range(0, len(titles)):
-        if df['Name'][i].lower() in titles[j].lower():
+        if df['Name'][i] in titles[j]:
             news_dict[titles[j]] = df['Name'][i]
 
-categories = ['neutral', 'negative', 'positive']
-y = sentiment_df['Sentiment']
-x = sentiment_df['Headline']
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+def get_sentiment(sentence):
+    sid_obj = SentimentIntensityAnalyzer()
+    sentiment_dict = sid_obj.polarity_scores(sentence)
 
-model = make_pipeline(TfidfVectorizer(), MultinomialNB())
+    if sentiment_dict['compound'] >= 0.05:
+        return "Positive"
 
-model.fit(x_train, y_train)
+    elif sentiment_dict['compound'] <= - 0.05:
+        return "Negative"
 
-labels = model.predict(x_test)
+    else:
+        return "Neutral"
 
 stories = []
+
 for i in news_dict:
     stories.append(i)
 
-for i in range(0, len(stories)):
-    stories[i] = [stories[i]]
-
 positive_companies = []
 negative_companies = []
+print(top_headlines)
 print(stories)
 for i in range(0, len(stories)):
-    prediction = model.predict(stories[i])
+    prediction = get_sentiment(stories[i])
     print(prediction)
-    if prediction == 'positive':
+    if prediction == 'Positive':
         is_in = False
         for company in positive_companies:
             if company == news_dict[stories[i]]:
                 is_in = True
         if not is_in:
             positive_companies.append(news_dict[stories[i]])
-    elif prediction == 'negative':
+    elif prediction == 'Negative':
         is_in = False
         for company in negative_companies:
             if company == news_dict[stories[i]]:
